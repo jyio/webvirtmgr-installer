@@ -12,9 +12,6 @@ case "$1" in
 		if getent passwd "$NAME" >/dev/null; then
 			deluser "$NAME" || true
 		fi
-		if getent group "$NAME" >/dev/null; then
-			delgroup "$NAME" || true
-		fi
 		rm -rf "$DST"
 		;;
 esac

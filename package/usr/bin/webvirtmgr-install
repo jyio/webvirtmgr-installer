@@ -7,7 +7,7 @@ DST='/opt/webvirtmgr'
 NAME='webvirtmgr'
 
 if ! getent passwd "$NAME" >/dev/null; then
-	adduser --disabled-password --home "$DST" --gecos '' "$NAME" || true
+	adduser --system --disabled-password --shell "/bin/sh" --home "$DST" --gecos '' "$NAME" || true
 	if getent group libvirt >/dev/null; then
 		adduser "$NAME" libvirt
 	else
@@ -40,7 +40,7 @@ if ! [ -e "$DST/.ssh/authorized_keys" ]; then
 	cp "$DST/.ssh/id_dsa.pub" "$DST/.ssh/authorized_keys"
 fi
 
-chown -R "$NAME:$NAME" "$DST"
+chown -R "$NAME:0" "$DST"
 chmod +x "$DST/bin/console/webvirtmgr-novnc"
 
 supervisorctl reload || true
