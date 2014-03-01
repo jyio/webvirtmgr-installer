@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+DST="/opt/webvirtmgr"
+NAME='webvirtmgr'
+
+supervisorctl reload || true
+
+case "$1" in
+	purge)
+		if getent passwd "$NAME" >/dev/null; then
+			deluser "$NAME" || true
+		fi
+		if getent group "$NAME" >/dev/null; then
+			delgroup "$NAME" || true
+		fi
+		rm -rf "$DST"
+		;;
+esac
+
+exit 0

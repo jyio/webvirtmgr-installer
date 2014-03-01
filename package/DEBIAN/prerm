@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+	remove)
+		supervisorctl stop webvirtmgr-novnc || true
+		supervisorctl stop webvirtmgr || true
+		;;
+esac
+
+exit 0

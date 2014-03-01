@@ -1,0 +1,62 @@
+#!/bin/sh
+
+set -e
+
+SRC='https://github.com/retspen/webvirtmgr.git'
+DST='/opt/webvirtmgr'
+NAME='webvirtmgr'
+
+if ! getent passwd "$NAME" >/dev/null; then
+	adduser --disabled-password --home "$DST" --gecos '' "$NAME" || true
+	if getent group libvirt >/dev/null; then
+		adduser "$NAME" libvirt
+	else
+		if getent group libvirtd >/dev/null; then
+			adduser "$NAME" libvirtd
+		fi
+	fi
+fi
+
+if [ -e "$DST/bin/.git" ]; then
+	echo 'Updating...'
+	cd "$DST/bin"
+	git pull
+else
+	echo "Installing repo..."
+	mkdir -p "$DST" || true
+	git clone "$SRC" "$DST/bin"
+fi
+
+cd "$DST"
+
+if ! [ -d "$DST/.ssh" ]; then
+	mkdir -p "$DST/.ssh"
+	echo 'StrictHostKeyChecking=no' > "$DST/.ssh/config"
+	echo 'UserKnownHostsFile=/dev/null' >> "$DST/.ssh/config"
+	ssh-keygen -t dsa -N '' -f "$DST/.ssh/id_dsa"
+fi
+
+if ! [ -e "$DST/.ssh/authorized_keys" ]; then
+	cp "$DST/.ssh/id_dsa.pub" "$DST/.ssh/authorized_keys"
+fi
+
+chown -R "$NAME:$NAME" "$DST"
+chmod +x "$DST/bin/console/webvirtmgr-novnc"
+
+supervisorctl reload || true
+supervisorctl restart webvirtmgr || true
+supervisorctl restart webvirtmgr-novnc || true
+
+rm -f /etc/nginx/sites-enabled/default
+service nginx reload
+
+if ! [ -f "$DST/bin/webvirtmgr.sqlite3" ]; then
+	echo
+	echo '####################'
+	echo 'To complete WebVirtMgr installation, please run:'
+	echo "sudo -u $NAME $DST/bin/manage.py syncdb"
+	echo '####################'
+	echo
+fi
+
+exit 0

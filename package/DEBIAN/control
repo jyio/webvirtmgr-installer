@@ -1,0 +1,16 @@
+Package: webvirtmgr-installer
+Version: 1.0.0
+Architecture: all
+Maintainer: Jiang Yio <inportb@gmail.com>
+Installed-Size: 32
+Depends: git, libvirt-bin, qemu-kvm, dbus, python-pip, python-libvirt, python-libxml2, python-django, gunicorn, novnc, supervisor, nginx
+Provides: webvirtmgr
+Section: admin
+Priority: optional
+Homepage: http://retspen.github.io/
+Description: WebVirtMgr panel installer
+ Downloads and installs the WebVirtMgr panel. WebVirtMgr is a libvirt-based Web
+ interface for managing virtual machines. It allows you to create and configure
+ new domains, and adjust a domain's resource allocation. A VNC viewer presents
+ a full graphical console to the guest domain. KVM is currently the only
+ hypervisor supported.
