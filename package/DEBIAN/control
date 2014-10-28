@@ -3,7 +3,8 @@ Version: 1.0.0
 Architecture: all
 Maintainer: Jiang Yio <inportb@gmail.com>
 Installed-Size: 32
-Depends: git, libvirt-bin, qemu-kvm, dbus, python-pip, python-libvirt, python-libxml2, python-django, gunicorn, novnc, supervisor, nginx
+Depends: git, libvirt-bin, qemu-kvm, dbus, python-pip, python-libvirt, python-libxml2, python-django, gunicorn, novnc, supervisor
+Recommends: nginx
 Provides: webvirtmgr
 Section: admin
 Priority: optional
