@@ -48,7 +48,9 @@ supervisorctl restart webvirtmgr || true
 supervisorctl restart webvirtmgr-novnc || true
 
 rm -f /etc/nginx/sites-enabled/default
-service nginx reload
+if [ -f /etc/init.d/nginx ]; then
+	service nginx reload
+fi
 
 if ! [ -f "$DST/bin/webvirtmgr.sqlite3" ]; then
 	echo
